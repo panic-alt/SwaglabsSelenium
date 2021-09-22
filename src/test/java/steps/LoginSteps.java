@@ -15,8 +15,6 @@ public class LoginSteps {
     private WebDriver driver;
     LoginPage loginPage;
 
-
-
     @Given("the user is in the login page")
     public void the_user_is_in_the_login_page() {
 
@@ -26,7 +24,6 @@ public class LoginSteps {
         loginPage = new LoginPage(driver);
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         driver.get("https://www.saucedemo.com");
-
 
     }
 
@@ -38,36 +35,30 @@ public class LoginSteps {
     }
 
     @Then("reaches the inventory page")
-    public void reaches_the_inventory_page() {
+    public void reaches_the_inventory_page() throws PageValidationError {
 
-        try {
-            boolean burgerMenu = loginPage.checkBurger();
-            if (burgerMenu) {
-                System.out.println("Page validated");
-            } else {
-                throw new PageValidationError();
-            }
-        }catch(PageValidationError e) {
-            System.out.println(e.getMessage());
+        boolean burgerMenu = loginPage.checkBurger();
+
+        if (!burgerMenu) {
+            throw new PageValidationError("Page validation error. Could not find element it was looking for.");
         }
     }
+
+
     @Then("logs out")
-    public void logs_out() {
+    public void logs_out() throws PageValidationError {
 
         loginPage.logOut();
-        try {
-            boolean loginRobot = loginPage.checkRobot();
-            if (loginRobot) {
-                System.out.println("Page validated");
-            } else {
-                throw new PageValidationError();
-            }
-        }catch (PageValidationError e) {
-            System.out.println(e.getMessage());
 
+        boolean loginRobot = loginPage.checkRobot();
+
+        if (!loginRobot) {
+            throw new PageValidationError();
         }
+
         driver.close();
         driver.quit();
+
     }
 
 }
