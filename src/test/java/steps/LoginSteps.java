@@ -28,7 +28,12 @@ public class LoginSteps {
     }
 
     @When("the user logs in with (.*) and (.*)")
-    public void the_user_logs_in_with_and(String  username, String password) {
+    public void the_user_logs_in_with_and(String  username, String password) throws PageValidationError {
+
+        boolean loginRobot = loginPage.checkRobot();
+        if (!loginRobot) {
+            throw new PageValidationError("Page validation error. Could not find element it was looking for.");
+        }
 
         loginPage.performLogin(username, password);
 
